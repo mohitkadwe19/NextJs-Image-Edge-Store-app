@@ -3,20 +3,37 @@
 import { Fragment, useState } from "react";
 import { Disclosure, Menu, Transition, Switch } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import Link from 'next/link'
+import Image from 'next/image'
 
-const navigation = [
-  { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-];
+type Navigation = {
+  name: string;
+  href: string;
+  current: boolean;
+}
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 function Navbar() {
-  const [enabled, setEnabled] = useState(true);
+
+  const [navigation, setNavigation] = useState([
+    { name: "Single Upload", href: "/", current: true },
+    { name: "Multi Upload", href: "/multiple", current: false },
+    { name: "Protected Upload", href: "/protected", current: false },
+  ]);
+
+
+  const handleNavigation = ({ name } : Navigation) => {
+    setNavigation((prev) => {
+      return prev.map((navigation) => {
+        return navigation.name === name
+          ? { ...navigation, current: true }
+          : { ...navigation, current: false };
+      });
+    });
+  }
 
   return (
     <Fragment>
@@ -39,16 +56,18 @@ function Navbar() {
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
-                    <img
-                      className="h-8 w-auto"
-                      src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500"
-                      alt="Your Company"
+                    <Image
+                      className="h-8 w-auto rounded-full"
+                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      alt="Image-Edge-Store"
+                      width={32}
+                      height={32}
                     />
                   </div>
                   <div className="hidden sm:ml-6 sm:block">
                     <div className="flex space-x-4">
                       {navigation.map((item) => (
-                        <a
+                        <Link
                           key={item.name}
                           href={item.href}
                           className={classNames(
@@ -58,9 +77,10 @@ function Navbar() {
                             "rounded-md px-3 py-2 text-sm font-medium"
                           )}
                           aria-current={item.current ? "page" : undefined}
+                          onClick={() => handleNavigation(item)}
                         >
                           {item.name}
-                        </a>
+                        </Link>
                       ))}
                     </div>
                   </div>
@@ -81,10 +101,12 @@ function Navbar() {
                       <Menu.Button className="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                         <span className="absolute -inset-1.5" />
                         <span className="sr-only">Open user menu</span>
-                        <img
+                        <Image
                           className="h-8 w-8 rounded-full"
                           src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                          alt=""
+                          alt="profile"
+                          width={32}
+                          height={32}
                         />
                       </Menu.Button>
                     </div>
